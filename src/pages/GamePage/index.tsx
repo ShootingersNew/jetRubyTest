@@ -1,12 +1,15 @@
 import React from "react";
+import Container from "../../components/Container";
 
 const GamePage: React.FC<{ gameName: string }> = ({children, gameName}) => {
     return (
         <>
             <header>
-                {gameName}
+                <h1>{gameName}</h1>
             </header>
-            {children}
+            <Container>
+                {children}
+            </Container>
         </>
     )
 }
