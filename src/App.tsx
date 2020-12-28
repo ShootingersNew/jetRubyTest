@@ -4,11 +4,13 @@ import './App.css';
 import TilesGame from "./components/TilesGame";
 
 function App() {
-  return (
-    <div className="App">
-      <GamePage gameName={'TILES GAME'} children={TilesGame}/>
-    </div>
-  );
+    return (
+        <div className="App">
+            <GamePage gameName={'TILES GAME'}>
+                <TilesGame/>
+            </GamePage>
+        </div>
+    );
 }
 
 export default App;
