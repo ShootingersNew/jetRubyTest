@@ -1,4 +1,21 @@
-.tilesView{
-  display: flex;
-  flex-wrap: wrap;
+.tilesView {
+  &__controls{
+    padding-bottom: 40px;
+  }
+  &__tiles {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__difficulty{
+    padding: 20px 0;
+    & ul{
+      list-style: none;
+      width: 100px;
+
+      margin:0 auto 0;
+      & li{
+        text-align: left;
+      }
+    }
+  }
 }
