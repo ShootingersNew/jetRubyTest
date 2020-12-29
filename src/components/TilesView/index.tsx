@@ -4,7 +4,7 @@ import Tile from "../Tile";
 import {DifficultyType, IsTileOpenedTypes, OpenTileType, TileIdsTypes, TileType} from "../../types";
 
 type TilesViewPropTypes = {
-    arr?: TileType[],
+    tiles?: TileType[],
     isTileOpened: IsTileOpenedTypes,
     openedTilesIds: TileIdsTypes[]
     openTile: OpenTileType,
@@ -13,25 +13,26 @@ type TilesViewPropTypes = {
     resetGame: () => void,
     difficulty: number,
     difficultyArr: DifficultyType[],
-    setDifficulty: (idx: number) => void
+    setDifficulty: (idx: number) => void,
+    isEnded: boolean,
 }
 const TilesView: React.FC<TilesViewPropTypes>
     = ({
-           arr,
+           tiles,
            openTile,
            isTileOpened,
            round,
            score,
            resetGame,
+           isEnded,
            difficultyArr,
            setDifficulty,
            difficulty
        }) => {
-
     const mapTiles: () => JSX.Element = () => {
         return <>
             {
-                arr && arr.map(({ID, color, isGuessed, isOpened, colorPair}, id) => {
+                (tiles as TileType[]).map(({ID, color, isGuessed, isOpened, colorPair}, id) => {
                     return (
                         <Tile
                             colorPair={colorPair}
@@ -81,12 +82,22 @@ const TilesView: React.FC<TilesViewPropTypes>
                 </div>
                 <button onClick={resetGame} className="tileView__reset">Сбросить и сменить цвета</button>
             </div>
-            <div className={'tilesView__tiles'}>
+            {
+              !isEnded?  <div className={'tilesView__tiles'}>
                 {
                     mapTiles()
                 }
             </div>
+                  :
+                  <>
+                      <h1>ВЫ ПОБЕДИЛИ</h1>
+                      <h2>Вы справили с уровнем сложности {difficultyArr[difficulty].difficulty} за {round} раундов</h2>
+                      <h3>Ваш лучший результат на этом уровне сложности - {difficultyArr[difficulty].bestResult} раунд</h3>
+                  </>
+
+            }
         </>
     )
-}
+};
+
 export default TilesView

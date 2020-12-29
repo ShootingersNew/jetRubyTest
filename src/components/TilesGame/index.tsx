@@ -1,21 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import TilesView from "../TilesView";
-import {IsTileOpenedTypes, OpenTileType, TileIdsTypes, TileType, DifficultyType} from "../../types";
+import {IsTileOpenedTypes, OpenTileType, TileIdsTypes, TileType} from "../../types";
+import {ContextApp} from "../../reducer/reducer";
+import {addRandomTiles, markAsGuessed, setScore, setRound, setDifficulty,resetGame} from "../../reducer/actions";
+
 
 const TilesGame: React.FC = () => {
     //"smart" comp for TilesGame
 
-    const [tiles, setTiles] = useState<TileType[] | undefined>(undefined);
-    const [round, setRound] = useState(1);
-    const [score, setScore] = useState(0);
-    const [difficulty, setDifficulty] = useState(0)
+    const {state, dispatch} = useContext(ContextApp);
 
     // max score of the game; number of tiles = difficultyArr[x]*2
-    const difficultyArr: DifficultyType[] = [{difficulty: 'normal', maxScore: 8}, {difficulty: 'hard', maxScore: 16}]
-
     const [openedTilesIds, setOpenedTilesIds] = useState<TileIdsTypes[]>([]);
 
-    const compareTiles = tiles && openedTilesIds && openedTilesIds.length === 2 && openedTilesIds[0].colorPair === openedTilesIds[1].colorPair
+    const compareTiles = openedTilesIds && openedTilesIds.length === 2 && openedTilesIds[0].colorPair === openedTilesIds[1].colorPair
 
     const generateRandomTiles: () => TileType[] = () => {
         const randomColor: () => string = () => {
@@ -31,7 +29,7 @@ const TilesGame: React.FC = () => {
             return 0.5 - Math.random();
         }
         // generate an array of random colors
-        const colors = new Array(difficultyArr[difficulty].maxScore).fill(undefined).map((val, id) => {
+        const colors = new Array(state.tileGame.difficultyArr[state.tileGame.difficulty].maxScore).fill(undefined).map((val, id) => {
             return {ID: id, color: randomColor(), isOpened: false, isGuessed: false, colorPair: id};
         });
 
@@ -40,11 +38,10 @@ const TilesGame: React.FC = () => {
     }
 
     const openTile: OpenTileType = (id, colorPair) => {
-
         if (openedTilesIds && openedTilesIds.length > 1) {
             //close our tiles
             setOpenedTilesIds([])
-            setRound(round + 1)
+            dispatch(setRound(state.tileGame.round + 1))
         } else {
 
             openedTilesIds && openedTilesIds.length !== 0 && id !== openedTilesIds[0].id
@@ -55,50 +52,45 @@ const TilesGame: React.FC = () => {
         }
     }
 
-    const resetGame: () => void = () => {
-        setTiles(generateRandomTiles())
+    const reset: () => void = () => {
+        dispatch(resetGame())
         setOpenedTilesIds([])
-        setScore(0)
-        setRound(1)
+        dispatch(addRandomTiles(generateRandomTiles()))
     }
 
     const isTileOpened: IsTileOpenedTypes = (id, isGuessed) => {
         return openedTilesIds.some((tile) => tile.id === id) || isGuessed
     }
+    const dispatchDifficulty: (lvl: number) => void = (lvl) => {
+        dispatch(setDifficulty(lvl))
+        resetGame();
+    }
     useEffect(() => {
         const markTheGuessed: () => void = () => {
-            if (compareTiles && tiles && openedTilesIds) {
-                const copiedTilesArr = tiles?.slice();
-                copiedTilesArr.forEach((tile, id) => {
-                    if (tile.colorPair === openedTilesIds[0].colorPair) {
-                        copiedTilesArr[id].isGuessed = true
-                    }
-                })
-                setTiles(copiedTilesArr)
+            if (compareTiles && openedTilesIds) {
+                dispatch(markAsGuessed(openedTilesIds[0].colorPair))
                 setOpenedTilesIds([])
-                setScore(score + 1)
+                dispatch(setScore(state.tileGame.score + 1))
             }
         }
         markTheGuessed()
 
-    }, [compareTiles, openedTilesIds, tiles, score])
+    }, [state.tileGame.score, dispatch, compareTiles, openedTilesIds])
 
     useEffect(() => {
-        setTiles(generateRandomTiles())
-    }, [difficulty])
+        dispatch(addRandomTiles(generateRandomTiles()))
+    }, [dispatch, state.tileGame.difficulty])
 
 
-    return <TilesView
-        setDifficulty={setDifficulty}
-        difficultyArr={difficultyArr}
-        difficulty={difficulty}
-        score={score}
-        round={round}
-        isTileOpened={isTileOpened}
-        openedTilesIds={openedTilesIds}
-        openTile={openTile}
-        arr={tiles}
-        resetGame={resetGame}
-    />
+    return (
+        <TilesView
+            {...state.tileGame}
+            setDifficulty={dispatchDifficulty}
+            isTileOpened={isTileOpened}
+            openedTilesIds={openedTilesIds}
+            openTile={openTile}
+            resetGame={reset}
+        />
+    )
 }
 export default TilesGame
