@@ -4,6 +4,7 @@ import cn from 'classnames'
 import {IsTileOpenedTypes, OpenTileType} from "../../types";
 
 
+
 type TilePropTypes = {
     className?: string,
     ID: number,
@@ -31,6 +32,7 @@ const Tile: React.FC<TilePropTypes & HTMLAttributes<any>>
         tile: true,
         [`${className}`]: className,
         [`tile_closed_${isClosed}`]: true,
+        applyflip: isClosed,
         [`tile_guessed_${isGuessed}`]: true
     });
     const clickHandler: () => void = () => {
@@ -56,11 +58,11 @@ const Tile: React.FC<TilePropTypes & HTMLAttributes<any>>
     }, [isClosed])
 
     return (
-        <div className={"flip-card " + tileClassNames} onClick={!isGuessed ? clickHandler : undefined}>
-            <div className="flip-card-inner">
-                <div className="flip-card-front tile__back"/>
-                <div className="flip-card-back"
-                     style={isClosed || !isColorHidden ? {backgroundColor: `${color}`} : undefined}/>
+        <div className={"card " + tileClassNames} onClick={!isGuessed ? clickHandler : undefined}>
+            <div className="content">
+                <div className="cardFront tile__back"/>
+                <div className="cardBack"
+                     style={{backgroundColor: isClosed || !isColorHidden? `${color}` : "wheat"}}/>
             </div>
         </div>
     )

@@ -1,6 +1,5 @@
 .tile {
   width: calc(25% - 2px);
-  border: 1px solid firebrick;
   &__back{
     background-image: url("./img/pattern.png");
     background-size: cover;
@@ -19,44 +18,114 @@
   }
 }
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
-.flip-card {
-  background-color: transparent;
-  border: 1px solid #f1f1f1;
-  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+.card {
+  display:block;
+  font-size:25px;
+  font-weight:bold;
 }
 
-/* This container is needed to position the front and back side */
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
+.card .content {
+  transition: 0.5s ease-out;
+  -webkit-transition: 0.5s ease-out;
+  -moz-transition: 0.5s ease-out;
+  -o-transition: 0.5s ease-out;
+  -ms-transition: 0.5s ease-out;
   transform-style: preserve-3d;
-}
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
 
-/* Do an horizontal flip when you move the mouse over the flip box container */
-.tile_closed_true .flip-card-inner {
-  transform: rotateY(180deg);
-}
+  /* content backface is visible so that static content still appears */
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  -moz-backface-visibility: visible;
+  -o-backface-visibility: visible;
+  -ms-backface-visibility: visible;
 
-/* Position the front and back side */
-.flip-card-front, .flip-card-back {
-  position: absolute;
+
+  border: 1px solid grey;
+  border-radius: 15px;
+  position:relative;
   width: 100%;
   height: 100%;
-  -webkit-backface-visibility: hidden; /* Safari */
-  backface-visibility: hidden;
-}
 
-/* Style the front side (fallback if image is missing) */
-.flip-card-front {
-  background-color: #bbb;
-  color: black;
 }
-
-/* Style the back side */
-.flip-card-back {
-  color: white;
+.card.applyflip .content {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
 }
+
+
+
+.card .content .cardFront {
+  background-color: skyblue;
+  color: yellow;
+}
+
+.card .content .cardBack {
+  background-color: tomato;
+  color: skyblue;
+}
+
+.card .content .cardFront, .card .content .cardBack {
+  /* Backface visibility works great for all but IE. As such, we mark the backface visible in IE and manage visibility ourselves */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  -ms-backface-visibility: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  line-height:200px;
+  border-radius: 14px;
+}
+.card .content .cardFront, .card.applyflip .content .cardFront {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
+}
+
+.card .content .cardBack, .card.applyflip .content .cardBack {
+  transform: rotateY(-180deg);
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  -o-transform: rotateY(-180deg);
+  -ms-transform: rotateY(-180deg);
+}
+
+.card .content .cardFront, .card.applyflip .content .cardBack {
+  /* IE Hack. Halfway through the card flip, set visibility. Keep other browsers visible throughout the card flip. */
+  animation: stayvisible 0.5s both;
+  -webkit-animation: stayvisible 0.5s both;
+  -moz-animation: stayvisible 0.5s both;
+  -o-animation: stayvisible 0.5s both;
+  -ms-animation: donothing 0.5s;
+  -ms-transition: visibility 0s linear 0.17s;
+  visibility: visible;
+}
+.card.applyflip .content .cardFront, .card .content .cardBack {
+  /* IE Hack. Halfway through the card flip, set visibility. Keep other browsers visible throughout the card flip. */
+  animation: stayvisible 0.5s both;
+  -webkit-animation: stayvisible 0.5s both;
+  -moz-animation: stayvisible 0.5s both;
+  -o-animation: stayvisible 0.5s both;
+  -ms-animation: donothing 0.5s;
+  -ms-transition: visibility 0s linear 0.17s;
+  visibility: hidden;
+}
+@keyframes stayvisible { from { visibility: visible; } to { visibility: visible; } }
+@-webkit-keyframes stayvisible { from { visibility: visible; } to { visibility: visible; } }
+@-moz-keyframes stayvisible { from { visibility: visible; } to { visibility: visible; } }
+@-o-keyframes stayvisible { from { visibility: visible; } to { visibility: visible; } }
+
+@-ms-keyframes donothing { 0% { } 100% { } }
