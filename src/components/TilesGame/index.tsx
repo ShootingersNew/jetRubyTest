@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import TilesView from "../TilesView";
 import {IsTileOpenedTypes, OpenTileType, TileIdsTypes, TileType} from "../../types";
 import {ContextApp} from "../../reducer/reducer";
-import {addRandomTiles, markAsGuessed, setScore, setRound, setDifficulty,resetGame} from "../../reducer/actions";
+import {addRandomTiles, markAsGuessed, setScore, setRound, setDifficulty, resetGame} from "../../reducer/actions";
 
 
 const TilesGame: React.FC = () => {
@@ -66,16 +66,26 @@ const TilesGame: React.FC = () => {
         resetGame();
     }
     useEffect(() => {
-        const markTheGuessed: () => void = () => {
-            if (compareTiles && openedTilesIds) {
-                dispatch(markAsGuessed(openedTilesIds[0].colorPair))
-                setOpenedTilesIds([])
-                dispatch(setScore(state.tileGame.score + 1))
+        const markTheGuessed:()=>void=()=>{
+            dispatch(markAsGuessed(openedTilesIds[0].colorPair))
+            setOpenedTilesIds([])
+            dispatch(setRound(state.tileGame.round + 1))
+        }
+        const compare: () => void = () => {
+            if (openedTilesIds.length > 1) {
+                if (compareTiles) {
+                   markTheGuessed()
+                } else {
+                    setTimeout(() => {
+                        setOpenedTilesIds([])
+                        dispatch(setRound(state.tileGame.round + 1))
+                    }, 1000)
+                }
             }
         }
-        markTheGuessed()
+        compare()
 
-    }, [state.tileGame.score, dispatch, compareTiles, openedTilesIds])
+    }, [state.tileGame.round,state.tileGame.score, dispatch, compareTiles, openedTilesIds])
 
     useEffect(() => {
         dispatch(addRandomTiles(generateRandomTiles()))

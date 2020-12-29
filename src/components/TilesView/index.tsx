@@ -32,7 +32,7 @@ const TilesView: React.FC<TilesViewPropTypes>
     const mapTiles: () => JSX.Element = () => {
         return <>
             {
-                (tiles as TileType[]).map(({ID, color, isGuessed, isOpened, colorPair}, id) => {
+                tiles && (tiles as TileType[]).map(({ID, color, isGuessed, isOpened, colorPair}, id) => {
                     return (
                         <Tile
                             colorPair={colorPair}
