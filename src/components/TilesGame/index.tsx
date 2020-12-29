@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import TilesView from "../TilesView";
 import {IsTileOpenedTypes, OpenTileType, TileIdsTypes, TileType} from "../../types";
 import {ContextApp} from "../../reducer/reducer";
-import {addRandomTiles, markAsGuessed, setScore, setRound, setDifficulty, resetGame} from "../../reducer/actions";
+import {addRandomTiles, markAsGuessed, setRound, setDifficulty, resetGame} from "../../reducer/actions";
 
 
 const TilesGame: React.FC = () => {

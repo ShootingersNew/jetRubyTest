@@ -58,42 +58,47 @@ const TilesView: React.FC<TilesViewPropTypes>
                     <div>Ваш счет {score}</div>
                     <div>Раунд {round}</div>
                 </div>
-                <div className="tilesView__difficulty">
-                    Difficulty
-                    <ul>
-                        {
-                            difficultyArr.map((d, idx) => {
-                                return <li key={idx}>
-                                    {
-                                        <label>
-                                            <input
-                                                onChange={() => setDifficulty(idx)}
-                                                checked={difficulty === idx}
-                                                type="radio"
-                                                value={idx}
-                                                name={'diff'}/>
-                                            {d.difficulty}
-                                        </label>
-                                    }
-                                </li>
-                            })
-                        }
-                    </ul>
-                </div>
+                {
+                    !isEnded && <div className="tilesView__difficulty">
+                        Difficulty
+                        <ul>
+                            {
+                                difficultyArr.map((d, idx) => {
+                                    return <li key={idx}>
+                                        {
+                                            <label>
+                                                <input
+                                                    onChange={() => setDifficulty(idx)}
+                                                    checked={difficulty === idx}
+                                                    type="radio"
+                                                    value={idx}
+                                                    name={'diff'}/>
+                                                {d.difficulty}
+                                            </label>
+                                        }
+                                    </li>
+                                })
+                            }
+                        </ul>
+
+                    </div>
+                }
                 <button onClick={resetGame} className="tileView__reset">Сбросить и сменить цвета</button>
             </div>
             {
-              !isEnded?  <div className={'tilesView__tiles'}>
-                {
-                    mapTiles()
-                }
-            </div>
-                  :
-                  <>
-                      <h1>ВЫ ПОБЕДИЛИ</h1>
-                      <h2>Вы справили с уровнем сложности {difficultyArr[difficulty].difficulty} за {round} раундов</h2>
-                      <h3>Ваш лучший результат на этом уровне сложности - {difficultyArr[difficulty].bestResult} раунд</h3>
-                  </>
+                !isEnded ? <div className={'tilesView__tiles'}>
+                        {
+                            mapTiles()
+                        }
+                    </div>
+                    :
+                    <>
+                        <h1>ВЫ ПОБЕДИЛИ</h1>
+                        <h2>Вы справили с уровнем
+                            сложности {difficultyArr[difficulty].difficulty} за {round} раундов</h2>
+                        <h3>Ваш лучший результат на этом уровне сложности
+                            - {difficultyArr[difficulty].bestResult} раунд</h3>
+                    </>
 
             }
         </>

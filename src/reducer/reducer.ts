@@ -27,7 +27,7 @@ export const initialState: ReducerStateType = {
     }
 };
 
-export const AppReducer:Reducer<ReducerStateType, Action<ActionPayloadTypes> >= (state = initialState, action:ActionPayloadTypes) => {
+export const AppReducer: Reducer<ReducerStateType, Action<ActionPayloadTypes>> = (state = initialState, action: ActionPayloadTypes) => {
     switch (action.type) {
         case ADD_TILES:
             console.log(action)
@@ -49,7 +49,7 @@ export const AppReducer:Reducer<ReducerStateType, Action<ActionPayloadTypes> >= 
                     difficultyArr: state.tileGame.difficultyArr.map((d, id) => {
                         return {
                             ...d,
-                            bestResult: isEnded && id === state.tileGame.difficulty && ((d.bestResult && state.tileGame.round < d.bestResult) || d.bestResult === 0) ? state.tileGame.round : d.bestResult
+                            bestResult: isEnded && id === state.tileGame.difficulty && ((d.bestResult && state.tileGame.round < d.bestResult) || d.bestResult === 0) ? state.tileGame.round + 1 : d.bestResult
                         }
                     }),
                     tiles: state.tileGame.tiles.map((tile) => {
